@@ -16,27 +16,29 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LocalProcessor {
-    private String processorName;
+    private StringBuilder processorName;
     private long period = 10_000_000_000_000L;
-    private String processorVersion;
+    private StringBuilder processorVersion;
     private int valueOfCheap;
     private Scanner informationScanner;
     private List<String> stringList = new LinkedList<>();
 
     public LocalProcessor(String processorName, long period, String processorVersion, int valueOfCheap,
                           Scanner informationScanner, List<String> stringList) {
-        this.processorName = processorName;
+        this.processorName = new StringBuilder(processorName);
         this.period = period;
-        this.processorVersion = processorVersion;
+        this.processorVersion = new StringBuilder(processorVersion);
         this.valueOfCheap = valueOfCheap;
         this.informationScanner = informationScanner;
         this.stringList = stringList;
     }
+
     public LocalProcessor() {
     }
 
     @ListIteratorAnnotation
     public void listIterator (List<String> stringList) {
+        if (stringList != null) throw new NullPointerException();
         int i = 0;
         List<String> list = new ArrayList<>(stringList);
         for (String str : list) {
@@ -57,21 +59,28 @@ public class LocalProcessor {
             sb.append(string);
             sb.append(" ");
         }
-        processorName = sb.toString();
-        return processorName;
+        processorName = sb;
+        return processorName.toString();
     }
 
     @ReadFullProcessorNameAnnotation
     public void readFullProcessorName(File file) throws FileNotFoundException {
         StringBuilder sb = new StringBuilder();
-        if (processorVersion != null) {
-            sb.append(processorVersion);
-        }
-        try (Scanner scanner = new Scanner(file)) {
-            while (scanner.hasNextLine()) {
-                sb.append(scanner.nextLine());
+
+        try {
+             informationScanner = new Scanner(file);
+            if (processorVersion != null) {
+                sb.append(processorVersion);
+            }
+            while (informationScanner.hasNext()) {
+                sb.append(informationScanner.nextLine());
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (informationScanner != null) {
+                informationScanner.close();
             }
         }
-        processorVersion = sb.toString();
     }
 }
