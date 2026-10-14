@@ -38,7 +38,7 @@ public class LocalProcessor {
 
     @ListIteratorAnnotation
     public void listIterator (List<String> stringList) {
-        if (stringList != null) throw new NullPointerException();
+        if (stringList == null) throw new NullPointerException();
         int i = 0;
         List<String> list = new ArrayList<>(stringList);
         for (String str : list) {
