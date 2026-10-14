@@ -38,13 +38,11 @@ public class LocalProcessor {
 
     @ListIteratorAnnotation
     public void listIterator (List<String> stringList) {
-        if (stringList == null) {
-            return;
-        }
+        if (stringList == null) throw new NullPointerException();
         int i = 0;
         List<String> list = new ArrayList<>(stringList);
         for (String str : list) {
-            if (str == null) throw new NullPointerException();
+
             if (i >= period) break;
             System.out.println(str.hashCode());
             i++;
